@@ -1,5 +1,4 @@
 import importlib.util
-import sys
 import inspect
 spec = importlib.util.spec_from_file_location('impl_sample', r'/tmp/pytest-of-runner/pytest-0/test_qa_and_dependency0/generated/impl_sample.py')
 mod = importlib.util.module_from_spec(spec)

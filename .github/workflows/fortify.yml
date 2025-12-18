@@ -28,10 +28,10 @@ on:
 
 # IMPORTANT: This workflow includes configuration for both Fortify on Demand (FOD) and 
 # Software Security Center (SSC). Your organization should choose ONE service to use:
-# - If using FOD: Keep the "Fortify on Demand configuration" section (lines 64-96) 
-#   and REMOVE the "Fortify Hosted / Software Security Center" section (lines 98-129)
-# - If using SSC: Keep the "Fortify Hosted / Software Security Center" section (lines 98-129)
-#   and REMOVE the "Fortify on Demand configuration" section (lines 64-96)
+# - If using FOD: Keep the "Fortify on Demand configuration" section (lines 74-105) 
+#   and REMOVE the "Fortify Hosted / Software Security Center" section (lines 108-138)
+# - If using SSC: Keep the "Fortify Hosted / Software Security Center" section (lines 108-138)
+#   and REMOVE the "Fortify on Demand configuration" section (lines 74-105)
 # Having both sections present will cause configuration conflicts. Remove the unused section
 # to prevent accidental misconfiguration when updating this workflow.
 

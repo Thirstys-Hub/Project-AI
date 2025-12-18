@@ -8,6 +8,8 @@ Flow:
    exposes selected_tab and username for the caller.
 """
 
+import logging
+
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QDialog,
@@ -21,6 +23,8 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.user_manager import UserManager
+
+logger = logging.getLogger(__name__)
 
 
 class LoginDialog(QDialog):

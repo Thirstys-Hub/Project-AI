@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 from PyQt6.QtWidgets import (
@@ -9,6 +10,8 @@ from PyQt6.QtWidgets import (
     QSpinBox,
     QVBoxLayout,
 )
+
+logger = logging.getLogger(__name__)
 
 DATA_DIR = os.getenv("DATA_DIR", "data")
 SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")

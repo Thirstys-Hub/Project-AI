@@ -26,6 +26,15 @@ on:
     - cron: '21 13 * * 4'
   workflow_dispatch:
 
+# IMPORTANT: This workflow includes configuration for both Fortify on Demand (FOD) and 
+# Software Security Center (SSC). Your organization should choose ONE service to use:
+# - If using FOD: Keep the "Fortify on Demand configuration" section (lines 64-96) 
+#   and REMOVE the "Fortify Hosted / Software Security Center" section (lines 98-129)
+# - If using SSC: Keep the "Fortify Hosted / Software Security Center" section (lines 98-129)
+#   and REMOVE the "Fortify on Demand configuration" section (lines 64-96)
+# Having both sections present will cause configuration conflicts. Remove the unused section
+# to prevent accidental misconfiguration when updating this workflow.
+
 jobs:
   Fortify-AST-Scan:
     # Use the appropriate runner for building your source code. Ensure dev tools required to build your code are present and configured appropriately (MSBuild, Python, etc).

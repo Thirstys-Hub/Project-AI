@@ -6,6 +6,11 @@ ENV/
 # Visual Studio workspace and CodeLens
 .vs/
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
 # Build artifacts
 build/
 dist/

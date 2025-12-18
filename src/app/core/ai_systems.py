@@ -149,7 +149,8 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
                 try:
                     os.remove(tmp_path)
                 except Exception as e:
-                    logger.debug(f"Could not remove temp file {tmp_path}: {e}")
+                    safe_tmp_path = tmp_path.replace('\r', '').replace('\n', '')
+                    logger.debug(f"Could not remove temp file {safe_tmp_path}: {e}")
     finally:
         _release_lock(lockfile)
 

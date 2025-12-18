@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404 - subprocess needed for running test framework (pytest)
 import time
 from typing import Any
 
@@ -72,7 +72,7 @@ class TestQAGenerator:
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
         try:
-            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)
+            res = subprocess.run(["pytest", run_dir, "-q"], capture_output=True, text=True)  # nosec B603 B607 - trusted test command
             return {"success": res.returncode == 0, "output": res.stdout + res.stderr, "returncode": res.returncode}
         except Exception as e:
             logger.exception("Failed to run tests: %s", e)

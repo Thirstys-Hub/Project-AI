@@ -71,13 +71,13 @@ class LoginDialog(QDialog):
         # style the TOC list as a card-list
         try:
             self.toc.setProperty("class", "cardList")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         # Apply a subtle shadow to the dialog to create a raised card look
         try:
             self._apply_shadow(self, radius=16, dx=0, dy=6, color=QColor(0, 0, 0, 110))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
 
     def _apply_shadow(
         self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
@@ -90,8 +90,8 @@ class LoginDialog(QDialog):
                 color = QColor(0, 0, 0, 120)
             eff.setColor(color)
             widget.setGraphicsEffect(eff)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
 
     def _onboard_admin(self):
         """Prompt the user to create an admin account on first run."""

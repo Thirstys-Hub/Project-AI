@@ -7,11 +7,14 @@ corruption from concurrent writers.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import time
 from typing import Any
 
 from app.core.ai_systems import _atomic_write_json
+
+logger = logging.getLogger(__name__)
 
 TELEMETRY_ENABLED = os.getenv("TELEMETRY_ENABLED", "false").lower() in ("1", "true", "yes")
 TELEMETRY_FILE = os.getenv("TELEMETRY_FILE", os.path.join("logs", "telemetry.json"))
@@ -62,9 +65,9 @@ class TelemetryManager:
             if len(events) > TELEMETRY_MAX_EVENTS:
                 events = events[-TELEMETRY_MAX_EVENTS:]
             _atomic_write_json(TELEMETRY_FILE, events)
-        except Exception:
+        except Exception as e:
             # Fail silently — telemetry must not affect app behavior
-            pass
+            logger.debug(f"Telemetry event recording failed: {e}")
 
 
 # Convenience function

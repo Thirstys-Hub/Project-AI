@@ -61,8 +61,8 @@ class SettingsDialog(QDialog):
             if os.path.exists(SETTINGS_FILE):
                 with open(SETTINGS_FILE, encoding="utf-8") as f:
                     return json.load(f)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         return {"theme": "light", "ui_scale": 10}
 
     @staticmethod

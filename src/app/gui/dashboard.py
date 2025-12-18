@@ -3,7 +3,10 @@ Main dashboard window implementation.
 """
 
 import base64
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 from PyQt6.QtCore import QEvent, QObject, QPointF, QPropertyAnimation, QTimer
 from PyQt6.QtGui import QAction, QColor, QFont
@@ -86,8 +89,8 @@ class HoverLiftEventFilter(QObject):
                 self._leave_off.setEndValue(QPointF(0, 3))
                 self._leave_blur.start()
                 self._leave_off.start()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         return False
 
 
@@ -115,8 +118,8 @@ class DashboardWindow(QMainWindow):
         # Select initial chapter/tab (book-like)
         try:
             self.tabs.setCurrentIndex(initial_tab)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         # Initialize page number
         self.update_page_number(self.tabs.currentIndex())
 
@@ -155,11 +158,11 @@ class DashboardWindow(QMainWindow):
                     off_anim.setStartValue(cur)
                     off_anim.setEndValue(QPointF(target_x, cur.y()))
                     off_anim.start()  # type: ignore
-            except Exception:
-                pass
-        except Exception:
+            except Exception as e:
+                logger.debug(f"Error in GUI operation: {e}")
+        except Exception as e:
             # animations are cosmetic; ignore errors
-            pass
+            logger.debug(f"Animation error: {e}")
 
     def setup_ui(self):
         """Setup the user interface"""
@@ -179,8 +182,8 @@ class DashboardWindow(QMainWindow):
         try:
             settings = SettingsDialog.load_settings()
             self._apply_settings(settings)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         # Keep page number update and add tab-change animation
         self.tabs.currentChanged.connect(self.update_page_number)
         self.tabs.currentChanged.connect(self.animate_tab_change)
@@ -191,8 +194,8 @@ class DashboardWindow(QMainWindow):
         # Attach hover/press lift behavior to all buttons for tactile feedback
         try:
             self._attach_lifts_to_all_buttons()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
 
     def _setup_toolbar(self):
         """Setup the main toolbar with icons and actions."""
@@ -215,8 +218,8 @@ class DashboardWindow(QMainWindow):
                         from PyQt6.QtGui import QIcon
 
                         return QIcon(path)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Error in GUI operation: {e}")
                 try:
                     return style.standardIcon(fallback_pixmap)  # type: ignore
                 except Exception:
@@ -252,9 +255,9 @@ class DashboardWindow(QMainWindow):
             toolbar.addAction(act_settings)
             # connect settings action
             act_settings.triggered.connect(self.open_settings_dialog)
-        except Exception:
+        except Exception as e:
             # toolbar is cosmetic — ignore failures
-            pass
+            logger.debug(f"Toolbar setup error: {e}")
 
     def _setup_main_widget(self):
         """Setup the main central widget with layout."""
@@ -263,16 +266,16 @@ class DashboardWindow(QMainWindow):
         # Mark the main container as 'floating' so QSS can style it as a raised panel
         try:
             main_widget.setProperty("class", "floating")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         self.setCentralWidget(main_widget)
         # Apply a subtle drop shadow to the main container for soft 3D depth
         try:
             self._apply_shadow(
                 main_widget, radius=18, dx=0, dy=6, color=QColor(0, 0, 0, 100)
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         layout = QVBoxLayout(main_widget)
         # provide comfortable spacing and margins for a modern UI
         layout.setContentsMargins(18, 18, 18, 18)
@@ -331,12 +334,12 @@ class DashboardWindow(QMainWindow):
                         "QPushButton#alert_button { background-color: red; }\n"
                     )
                     self.setStyleSheet(fallback_qss)
-                except Exception:
+                except Exception as e:
                     # ignore fallback stylesheet failures
-                    pass
-        except Exception:
+                    logger.debug(f"Fallback stylesheet error: {e}")
+        except Exception as e:
             # if anything fails, keep default styles
-            pass
+            logger.debug(f"Stylesheet loading error: {e}")
 
     def _add_all_tabs(self):
         """Add all tabs to the dashboard."""
@@ -353,9 +356,9 @@ class DashboardWindow(QMainWindow):
 
             self.user_mgmt = UserManagementWidget()
             self.tabs.addTab(self.user_mgmt, "Users")
-        except Exception:
+        except Exception as e:
             # non-fatal: keep going without Users tab
-            pass
+            logger.debug(f"Users tab setup error: {e}")
 
     def _attach_lift_to_button(self, button: QPushButton):
         """Ensure a button has a drop shadow effect and an event filter that
@@ -375,15 +378,15 @@ class DashboardWindow(QMainWindow):
                 button.installEventFilter(filt)
                 # keep a reference so it isn't garbage-collected
                 button._hover_lift_filter = filt  # type: ignore
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
 
     def _attach_lifts_to_all_buttons(self):
         try:
             for btn in self.findChildren(QPushButton):
                 self._attach_lift_to_button(btn)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         # Apply subtle shadows to each tab page to reinforce depth
         try:
             for i in range(self.tabs.count()):
@@ -393,8 +396,8 @@ class DashboardWindow(QMainWindow):
                     self._apply_shadow(
                         widget, radius=10, dx=0, dy=3, color=QColor(0, 0, 0, 80)
                     )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
 
     def _apply_stylesheet_from_settings(self, base_qss: str):
         """Apply stylesheet depending on saved theme setting (light/dark).
@@ -418,8 +421,8 @@ class DashboardWindow(QMainWindow):
             # best-effort: try to apply base qss
             try:
                 self.setStyleSheet(base_qss)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Error in GUI operation: {e}")
 
     def _apply_settings(self, settings: dict):
         """Apply runtime settings such as UI scale and reload stylesheet."""
@@ -428,9 +431,9 @@ class DashboardWindow(QMainWindow):
             app = QApplication.instance()
             if app is not None:
                 app.setFont(QFont("Segoe UI", size))  # type: ignore
-        except Exception:
+        except Exception as e:
             # ignore font errors
-            pass
+            logger.debug(f"Font setup error: {e}")
 
         # Reload the stylesheet so theme changes are applied
         qss_path = os.path.join(
@@ -443,8 +446,8 @@ class DashboardWindow(QMainWindow):
 
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
 
     def _apply_shadow(
         self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor | None = None
@@ -461,9 +464,9 @@ class DashboardWindow(QMainWindow):
                 color = QColor(0, 0, 0, 120)
             eff.setColor(color)
             widget.setGraphicsEffect(eff)
-        except Exception:
-            # best-effort: don't raise on styling failure
-            pass
+        except Exception as e:
+            # best-effort: don\'t raise on styling failure
+            logger.debug(f"Styling error: {e}")
 
     def open_settings_dialog(self):
         """Open the settings dialog and persist/apply new settings."""
@@ -482,8 +485,8 @@ class DashboardWindow(QMainWindow):
         # style as a card
         try:
             chat_tab.setProperty("class", "card")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         layout = QVBoxLayout(chat_tab)
 
         # Chat display
@@ -507,8 +510,8 @@ class DashboardWindow(QMainWindow):
         tasks_tab = QWidget()
         try:
             tasks_tab.setProperty("class", "card")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         layout = QVBoxLayout(tasks_tab)
 
         # Tasks list
@@ -527,8 +530,8 @@ class DashboardWindow(QMainWindow):
         tab = QWidget()
         try:
             tab.setProperty("class", "card")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         layout = QVBoxLayout(tab)
 
         # Interest input
@@ -563,8 +566,8 @@ class DashboardWindow(QMainWindow):
         tab = QWidget()
         try:
             tab.setProperty("class", "card")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         layout = QVBoxLayout(tab)
 
         # File selection

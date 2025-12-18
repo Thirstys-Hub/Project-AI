@@ -31,8 +31,8 @@ class CodexDeusMaximus:
         # Ensure legacy method binding for compatibility
         try:
             self.auto_fix_file = types.MethodType(self.__class__.auto_fix_file, self)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Could not bind auto_fix_file method: {e}")
 
     def initialize(self) -> bool:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")

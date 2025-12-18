@@ -148,8 +148,8 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
             if os.path.exists(tmp_path):
                 try:
                     os.remove(tmp_path)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Could not remove temp file {tmp_path}: {e}")
     finally:
         _release_lock(lockfile)
 
@@ -606,8 +606,8 @@ class LearningRequestManager:
                 conn.close()
                 try:
                     os.remove(legacy)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Could not remove legacy file {legacy}: {e}")
         except Exception:
             logger.exception("Migration from JSON to DB failed")
 
@@ -642,8 +642,8 @@ class LearningRequestManager:
         self._save_requests()
         try:
             send_event("learning_request_created", {"id": req_id, "topic": topic})
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Could not send learning_request_created event: {e}")
         return req_id
 
     def approve_request(self, req_id: str, response: str) -> bool:
@@ -667,8 +667,8 @@ class LearningRequestManager:
         self._save_requests()
         try:
             send_event("learning_request_approved", {"id": req_id, "response": response})
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Could not send learning_request_approved event: {e}")
         return True
 
     def deny_request(self, req_id: str, reason: str, to_vault: bool = True) -> bool:
@@ -686,8 +686,8 @@ class LearningRequestManager:
         self._save_requests()
         try:
             send_event("learning_request_denied", {"id": req_id, "reason": reason})
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Could not send learning_request_denied event: {e}")
         return True
 
     def get_pending(self) -> list[dict[str, Any]]:
@@ -822,9 +822,9 @@ class CommandOverrideSystem:
             try:
                 ph = PasswordHasher()
                 return ph.verify(self.password_hash, password)
-            except Exception:
+            except Exception as e:
                 # fall back to pbkdf2 check if stored format matches
-                pass
+                logger.debug(f"Argon2 verification failed, trying pbkdf2: {e}")
         try:
             parts = self.password_hash.split("$")
             if len(parts) != 3:
@@ -877,8 +877,8 @@ class CommandOverrideSystem:
         self._save_audit()
         try:
             send_event("command_override_requested", {"type": override_type.value, "reason": reason})
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Could not send command_override_requested event: {e}")
 
         return True, f"Override granted: {override_type.value}"
 

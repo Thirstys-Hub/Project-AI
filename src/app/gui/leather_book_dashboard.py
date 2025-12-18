@@ -10,7 +10,7 @@ Layout:
 - Background: 3D grid visualization
 """
 import math
-import random
+import secrets
 
 from PyQt6.QtCore import QDateTime, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
@@ -254,7 +254,7 @@ class StatsPanel(QFrame):
 
         self.uptime_seconds = 0
         self.session_seconds = 0
-        self._rng = random.Random()
+        self._rng = secrets.SystemRandom()
 
 
 class ProactiveActionsPanel(QFrame):

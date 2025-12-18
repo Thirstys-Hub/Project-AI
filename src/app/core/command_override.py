@@ -11,9 +11,12 @@ WARNING: This system grants full control over all safety mechanisms. Use with ca
 import base64
 import hashlib
 import json
+import logging
 import os
 from datetime import datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # Prefer passlib bcrypt if available for secure password hashing
 try:
@@ -31,9 +34,9 @@ class CommandOverrideSystem:
         # Ensure the base data directory exists to avoid persistence failures
         try:
             os.makedirs(self.data_dir, exist_ok=True)
-        except Exception:
+        except Exception as e:
             # Best-effort; other methods will also create directories when needed
-            pass
+            logger.debug(f"Could not create data directory {self.data_dir}: {e}")
 
         self.config_file = os.path.join(data_dir, "command_override_config.json")
         self.audit_log = os.path.join(data_dir, "command_override_audit.log")
@@ -127,8 +130,8 @@ class CommandOverrideSystem:
         if _bcrypt is not None:
             try:
                 return _bcrypt.hash(password)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Bcrypt hashing failed, falling back to PBKDF2: {e}")
         # Fallback to pbkdf2
         salt = os.urandom(16)
         iterations = 100_000

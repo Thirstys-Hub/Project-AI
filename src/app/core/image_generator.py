@@ -9,8 +9,8 @@ Supports multiple backends:
 
 import logging
 import os
+import secrets
 import time
-import random
 from datetime import datetime
 from enum import Enum
 from typing import Any
@@ -68,7 +68,7 @@ def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
                     logger.error("Max retries reached for %s %s (status=%s)", method, url, resp.status_code)
                     resp.raise_for_status()
                     return resp
-                backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+                backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + secrets.SystemRandom().random() * 0.1
                 logger.warning("Transient status %s for %s %s - retrying in %.2fs (attempt %d)", resp.status_code, method, url, backoff, attempt)
                 time.sleep(backoff)
                 continue
@@ -78,7 +78,7 @@ def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
             if attempt > MAX_API_RETRIES:
                 logger.exception("Request failed after %d attempts: %s %s", attempt, method, url)
                 raise
-            backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+            backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + secrets.SystemRandom().random() * 0.1
             logger.warning("Request exception for %s %s: %s - retrying in %.2fs (attempt %d)", method, url, exc, backoff, attempt)
             time.sleep(backoff)
 
@@ -279,7 +279,7 @@ class ImageGenerator:
                     if attempt > MAX_API_RETRIES:
                         logger.exception("OpenAI generate failed after %d attempts", attempt)
                         raise
-                    backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
+                    backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + secrets.SystemRandom().random() * 0.1
                     logger.warning("OpenAI transient error: %s - retrying in %.2fs (attempt %d)", exc, backoff, attempt)
                     time.sleep(backoff)
 

@@ -12,6 +12,7 @@ try:
     if len(req) == 0:
         # call the function and assert it does not raise and returns a truthy value
         res = _fn()
-        assert res or res is None or res == True
+        if not (res or res is None or res is True):
+            raise AssertionError("impl_sample() returned a falsy value that is not None or True")
 except Exception:
     raise

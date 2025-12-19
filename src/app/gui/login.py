@@ -95,7 +95,7 @@ class LoginDialog(QDialog):
             eff.setColor(color)
             widget.setGraphicsEffect(eff)
         except Exception as e:
-            logger.debug(f"Error in GUI operation: {e}")
+            logger.debug(f"Failed to apply graphics effect to widget: {e}")
 
     def _onboard_admin(self):
         """Prompt the user to create an admin account on first run."""

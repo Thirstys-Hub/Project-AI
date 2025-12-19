@@ -9,7 +9,7 @@ import logging
 import os
 import shutil
 import types
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 # --- CONFIGURATION ---
@@ -43,7 +43,7 @@ class CodexDeusMaximus:
         try:
             os.makedirs(os.path.dirname(self.audit_path), exist_ok=True)
             entry = {
-                "ts": datetime.now(UTC).isoformat(),
+                "ts": datetime.now(timezone.utc).isoformat(),
                 "action": action,
                 "details": details
             }

@@ -76,12 +76,12 @@ class LoginDialog(QDialog):
         try:
             self.toc.setProperty("class", "cardList")
         except Exception as e:
-            logger.debug(f"Error in GUI operation: {e}")
+            logger.debug(f"Failed to set property on TOC list: {e}")
         # Apply a subtle shadow to the dialog to create a raised card look
         try:
             self._apply_shadow(self, radius=16, dx=0, dy=6, color=QColor(0, 0, 0, 110))
         except Exception as e:
-            logger.debug(f"Error in GUI operation: {e}")
+            logger.debug(f"Failed to apply shadow effect: {e}")
 
     def _apply_shadow(
         self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None

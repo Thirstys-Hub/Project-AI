@@ -39,6 +39,8 @@ on:
 
 jobs:
   Fortify-AST-Scan:
+    # This workflow is configured to use Fortify on Demand (FoD). The SSC/ScanCentral configuration
+    # section has been removed to avoid conflicts, as only one Fortify integration method should be active.
     # Use the appropriate runner for building your source code. Ensure dev tools required to build your code are present and configured appropriately (MSBuild, Python, etc).
     runs-on: ubuntu-latest
     permissions:

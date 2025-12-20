@@ -18,13 +18,17 @@ name: Fortify AST Scan
 # Customize trigger events based on your DevSecOps process and/or policy
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "cerberus-integration" ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches: [ "main", "cerberus-integration" ]
   schedule:
     - cron: '21 13 * * 4'
   workflow_dispatch:
+
+# NOTE: This workflow is configured to use Fortify on Demand (FoD) for security scanning.
+# The SSC/ScanCentral configuration section has been removed to avoid conflicts.
+# Only one Fortify integration method should be configured at a time.
 
 jobs:
   Fortify-AST-Scan:

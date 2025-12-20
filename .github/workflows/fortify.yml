@@ -23,6 +23,13 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ "main", "cerberus-integration" ]
   schedule:
+    # NOTE: This Fortify AST scheduled scan is intentionally configured in addition to the
+    # Black Duck security scan workflow that also runs on Thursdays. We use both tools as
+    # part of a defense-in-depth strategy: Fortify provides application-centric SAST and SCA
+    # using its own ruleset and analysis engine, while Black Duck focuses on open-source
+    # composition analysis and license/security policy enforcement. Running both on a weekly
+    # schedule allows us to cross-validate findings and improve coverage, so this overlap
+    # is expected and not redundant but explicitly documented for CodeQL and reviewers.
     - cron: '21 13 * * 4'
   workflow_dispatch:
 

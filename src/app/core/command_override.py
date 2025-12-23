@@ -122,6 +122,16 @@ class CommandOverrideSystem:
             return False
         return len(s) == 64 and all(c in "0123456789abcdef" for c in s.lower())
 
+    def _legacy_sha256(self, password: str) -> str:
+        """
+        LEGACY ONLY: compute a raw SHA-256 hex digest of the password.
+
+        This is retained solely to support migration from historical
+        configurations that stored a plain SHA-256(password) hex string.
+        Do not use this for hashing new passwords; use _hash_with_bcrypt instead.
+        """
+        return hashlib.sha256(password.encode("utf-8")).hexdigest()
+
     def _hash_with_bcrypt(self, password: str) -> str:
         """Hash password using bcrypt (passlib) when available, otherwise PBKDF2 fallback."""
         if _bcrypt is not None:
@@ -181,7 +191,7 @@ class CommandOverrideSystem:
         # Legacy SHA256 migration
         if self._is_sha256_hash(self.master_password_hash):
             legacy_hash = self.master_password_hash
-            if hashlib.sha256(password.encode("utf-8")).hexdigest() == legacy_hash:
+            if self._legacy_sha256(password) == legacy_hash:
                 try:
                     new_hash = self._hash_with_bcrypt(password)
                     self.master_password_hash = new_hash

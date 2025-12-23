@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
+import subprocess  # nosec B404 - subprocess needed for running CI tools (pytest, ruff)
 import time
 from datetime import datetime
 from typing import Any
@@ -41,13 +41,13 @@ class CICheckerAgent:
         report = {"corr": corr, "timestamp": ts, "results": {}}
         # run pytest -q (only tests directory)
         try:
-            res = subprocess.run(["pytest", "-q"], capture_output=True, text=True)
+            res = subprocess.run(["pytest", "-q"], capture_output=True, text=True)  # nosec B603 B607 - trusted CI command
             report["results"]["pytest"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
         except Exception as e:
             report["results"]["pytest"] = {"rc": -1, "error": str(e)}
         # run ruff (lint)
         try:
-            res = subprocess.run(["ruff", "check", "src", "tests"], capture_output=True, text=True)
+            res = subprocess.run(["ruff", "check", "src", "tests"], capture_output=True, text=True)  # nosec B603 B607 - trusted CI command
             report["results"]["ruff"] = {"rc": res.returncode, "output": res.stdout + res.stderr}
         except Exception as e:
             report["results"]["ruff"] = {"rc": -1, "error": str(e)}

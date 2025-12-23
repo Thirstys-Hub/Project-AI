@@ -1,0 +1,18 @@
+import importlib.util
+import inspect
+spec = importlib.util.spec_from_file_location('impl_sample', r'/tmp/pytest-of-runner/pytest-0/test_qa_and_dependency0/generated/impl_sample.py')
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+assert hasattr(mod, 'impl_sample')
+_fn = getattr(mod, 'impl_sample')
+try:
+    sig = inspect.signature(_fn)
+    # count required params (no defaults)
+    req = [p for p in sig.parameters.values() if p.default is inspect._empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]
+    if len(req) == 0:
+        # call the function and assert it does not raise and returns a truthy value
+        res = _fn()
+        if not (res or res is None or res is True):
+            raise AssertionError("impl_sample() returned a falsy value that is not None or True")
+except Exception:
+    raise

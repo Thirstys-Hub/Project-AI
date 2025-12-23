@@ -1,0 +1,4 @@
+{
+  "_note": "This file is not used for audit logging.",
+  "_details": "Per project documentation, command override audit entries are logged to 'command_override_audit.log' in the data directory. This JSON file is retained only as a placeholder to avoid confusion; it should not be used for active logging."
+}

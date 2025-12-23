@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 from PyQt6.QtWidgets import (
@@ -9,6 +10,8 @@ from PyQt6.QtWidgets import (
     QSpinBox,
     QVBoxLayout,
 )
+
+logger = logging.getLogger(__name__)
 
 DATA_DIR = os.getenv("DATA_DIR", "data")
 SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")
@@ -61,8 +64,8 @@ class SettingsDialog(QDialog):
             if os.path.exists(SETTINGS_FILE):
                 with open(SETTINGS_FILE, encoding="utf-8") as f:
                     return json.load(f)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Error in GUI operation: {e}")
         return {"theme": "light", "ui_scale": 10}
 
     @staticmethod

@@ -8,6 +8,8 @@ Flow:
    exposes selected_tab and username for the caller.
 """
 
+import logging
+
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QDialog,
@@ -21,6 +23,8 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.user_manager import UserManager
+
+logger = logging.getLogger(__name__)
 
 
 class LoginDialog(QDialog):
@@ -71,13 +75,13 @@ class LoginDialog(QDialog):
         # style the TOC list as a card-list
         try:
             self.toc.setProperty("class", "cardList")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to set property on TOC list: {e}")
         # Apply a subtle shadow to the dialog to create a raised card look
         try:
             self._apply_shadow(self, radius=16, dx=0, dy=6, color=QColor(0, 0, 0, 110))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to apply shadow effect: {e}")
 
     def _apply_shadow(
         self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
@@ -90,8 +94,8 @@ class LoginDialog(QDialog):
                 color = QColor(0, 0, 0, 120)
             eff.setColor(color)
             widget.setGraphicsEffect(eff)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to apply graphics effect to widget: {e}")
 
     def _onboard_admin(self):
         """Prompt the user to create an admin account on first run."""

@@ -26,3 +26,8 @@ README_UPDATED.md
 *.jar
 screenshots/
 codacy-analysis-cli-assembly.jar
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo

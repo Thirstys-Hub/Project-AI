@@ -18,7 +18,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\tools\setup_designer_env.ps1
 ```
 
-This will create `venv-designer` in the repo root, try to install developer requirements (if present) or `pyqt6` (fallbacks to `pyside6`), and launch the Qt Designer (`pyside6-designer.exe` when available).
+This will create `venv-designer` in the repo root, try to install developer requirements (if present) or `pyqt6` (falls back to `pyside6`), and launch the Qt Designer (`pyside6-designer.exe` when available).
 
 
 ## Smoke checks & quick verification
@@ -62,15 +62,15 @@ Key resources live under `docs/developer/` (smoke checks, troubleshooting, cover
 
 - Detailed steps and troubleshooting tips live in `docs/developer/smoke_checks.md` and `docs/developer/troubleshooting.md` if you need full context.
 
-- GradientBoosting for sentiment analysis
- - Neural Network (MLPClassifier) for user behavior prediction
- - Model training, persistence, and real-time predictions
- - PyTorch-based ThreatDetector (optional) for ethical checks
+- **Machine Learning Features** (✅ INTEGRATED)
+  - GradientBoosting for sentiment analysis
+  - Neural Network (MLPClassifier) for user behavior prediction
+  - Model training, persistence, and real-time predictions
+  - PyTorch-based ThreatDetector (optional) for ethical checks
     - Detects potential Zeroth/First-law conflicts using a small neural detector
     - Falls back to keyword heuristics when `torch` is not installed
     - Models and vocab are persisted to `data/ai_persona/` when trained or saved
     - Use the persona UI to view ML scores (if enabled) and run supervised retraining
-
 - **Plugin System** (✅ IMPLEMENTED)
   - Dynamic plugin discovery and loading from `src/app/agents/` directory
   - Hook-based extension system with 8 built-in hooks (message_received, message_sent, before_action, after_action, persona_updated, conversation_started, conversation_ended, error_occurred)

@@ -18,10 +18,10 @@ def test_sha256_to_bcrypt_migration(tmp_path):
         json.dump(config, f)
 
     # instantiate system pointing to tmp data dir
-    sys = CommandOverrideSystem(data_dir=str(data_dir))
+    override_system = CommandOverrideSystem(data_dir=str(data_dir))
 
     # authenticate using legacy password
-    assert sys.authenticate(password) is True
+    assert override_system.authenticate(password) is True
     # after authentication, stored hash should no longer be the legacy hex
     with open(cfg_file, encoding="utf-8") as f:
         new_cfg = json.load(f)
@@ -29,13 +29,13 @@ def test_sha256_to_bcrypt_migration(tmp_path):
     assert new_hash is not None
     assert new_hash != legacy_hash
     # subsequent authenticate should still work
-    assert sys.authenticate(password) is True
+    assert override_system.authenticate(password) is True
 
 
 def test_set_and_verify_bcrypt(tmp_path):
     data_dir = tmp_path / "data"
     data_dir.mkdir()
-    sys = CommandOverrideSystem(data_dir=str(data_dir))
-    assert sys.set_master_password("mystrongpassword") is True
-    assert sys.authenticate("mystrongpassword") is True
-    assert sys.authenticate("wrong") is False
+    override_system = CommandOverrideSystem(data_dir=str(data_dir))
+    assert override_system.set_master_password("TEST_PASSWORD") is True
+    assert override_system.authenticate("TEST_PASSWORD") is True
+    assert override_system.authenticate("wrong") is False

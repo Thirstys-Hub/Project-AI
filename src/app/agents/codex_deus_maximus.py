@@ -8,9 +8,8 @@ import json
 import logging
 import os
 import shutil
-import types
-from datetime import datetime, timezone
-from typing import Any, List, Dict
+from datetime import UTC, datetime
+from typing import Any
 
 # --- CONFIGURATION ---
 logger = logging.getLogger("SchematicGuardian")
@@ -22,37 +21,36 @@ REQUIRED_DIRS = [
     "src",
 ]
 
+INDENTATION = "    "
+
 class CodexDeusMaximus:
     """Schematic Guardian AI that enforces repository structure and code standards."""
+
+    IGNORED_DIRS = ("venv", "env", "__pycache__", "build", "dist")
 
     def __init__(self, data_dir: str = "data") -> None:
         self.data_dir = data_dir
         self.audit_path = os.path.join(self.data_dir, "schematic_audit.json")
-        # Ensure legacy method binding for compatibility
-        try:
-            self.auto_fix_file = types.MethodType(self.__class__.auto_fix_file, self)
-        except Exception:
-            pass
 
     def initialize(self) -> bool:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")
         return True
 
-    def _audit(self, action: str, details: Dict[str, Any]) -> None:
+    def _audit(self, action: str, details: dict[str, Any]) -> None:
         """Log actions to the audit trail."""
         try:
             os.makedirs(os.path.dirname(self.audit_path), exist_ok=True)
             entry = {
-                "ts": datetime.now(timezone.utc).isoformat(),
+                "ts": datetime.now(UTC).isoformat(),
                 "action": action,
                 "details": details
             }
             with open(self.audit_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
         except Exception:
-            logger.error("Failed to write audit entry.")
+            logger.error("Failed to write audit entry.", exc_info=True)
 
-    def run_schematic_enforcement(self, root: str | None = None) -> Dict[str, Any]:
+    def run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
         """The Main Routine: Validates structure and fixes files."""
         root = root or os.getcwd()
         report = {
@@ -66,12 +64,12 @@ class CodexDeusMaximus:
         # Walk the repo to fix code files
         for dirpath, _, filenames in os.walk(root):
             # Ignore hidden/system folders
-            if any(part.startswith(".") or part in ("venv", "env", "__pycache__", "build", "dist") for part in dirpath.split(os.sep)):
+            if any(part.startswith(".") or part in self.IGNORED_DIRS for part in dirpath.split(os.sep)):
                 continue
 
             for fn in filenames:
                 path = os.path.join(dirpath, fn)
-                
+
                 # Enforce formatting on specific types
                 if fn.endswith(('.py', '.md', '.json', '.yml', '.yaml')):
                     res = self.auto_fix_file(path)
@@ -83,24 +81,24 @@ class CodexDeusMaximus:
         self._audit("enforcement_run", report)
         return report
 
-    def _validate_structure(self, root: str) -> Dict[str, Any]:
+    def _validate_structure(self, root: str) -> dict[str, Any]:
         """Ensure the repository adheres to the required folder schematic."""
         missing = []
         for d in REQUIRED_DIRS:
             if not os.path.exists(os.path.join(root, d)):
                 missing.append(d)
-        
+
         status = "HEALTHY" if not missing else "BROKEN"
         if missing:
             logger.warning(f"Schematic Violation: Missing directories {missing}")
-        
+
         return {"status": status, "missing_directories": missing}
 
-    def auto_fix_file(self, path: str) -> Dict[str, Any]:
+    def auto_fix_file(self, path: str) -> dict[str, Any]:
         """Strictly enforces formatting standards (Tabs->Spaces, EOF Newline, Syntax Check)."""
         if not os.path.exists(path):
             return {"success": False, "error": "missing"}
-        
+
         try:
             with open(path, encoding="utf-8") as f:
                 content = f.read()
@@ -109,9 +107,9 @@ class CodexDeusMaximus:
 
             # --- RULE 1: Python Specifics ---
             if path.endswith(".py"):
-                fixed = fixed.replace("\t", "    ") # No tabs
+                fixed = fixed.replace("\t", INDENTATION) # No tabs
                 fixed = "\n".join(line.rstrip() for line in fixed.splitlines()) # No trailing whitespace
-                
+
                 # Safety: Check syntax before accepting
                 try:
                     ast.parse(fixed)

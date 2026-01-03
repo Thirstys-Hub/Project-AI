@@ -1,0 +1,97 @@
+# Labeler configuration for auto-labeling pull requests
+# See https://github.com/actions/labeler for documentation
+
+# Python Core Code
+python:
+  - changed-files:
+    - any-glob-to-any-file: 'src/app/core/**/*.py'
+
+# GUI Code
+gui:
+  - changed-files:
+    - any-glob-to-any-file: 'src/app/gui/**/*.py'
+
+# AI Agents
+agents:
+  - changed-files:
+    - any-glob-to-any-file: 'src/app/agents/**/*.py'
+
+# Web Frontend
+web-frontend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'web/frontend/**/*'
+      - '!web/frontend/node_modules/**/*'
+
+# Web Backend
+web-backend:
+  - changed-files:
+    - any-glob-to-any-file: 'web/backend/**/*.py'
+
+# Android
+android:
+  - changed-files:
+    - any-glob-to-any-file: 'android/**/*'
+
+# Tests
+tests:
+  - changed-files:
+    - any-glob-to-any-file: 'tests/**/*.py'
+
+# Documentation
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**/*'
+
+# GitHub Workflows
+workflows:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/workflows/**/*.yml'
+      - '.github/workflows/**/*.yaml'
+
+# Dependencies
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'requirements.txt'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'pyproject.toml'
+      - 'setup.py'
+      - 'Pipfile'
+      - 'Pipfile.lock'
+
+# Security
+security:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'SECURITY.md'
+      - '.github/workflows/bandit.yml'
+      - '.github/workflows/codeql.yml'
+      - '.github/workflows/auto-security-fixes.yml'
+      - '.github/workflows/auto-bandit-fixes.yml'
+
+# Docker
+docker:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - '.dockerignore'
+
+# Configuration
+configuration:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'pytest.ini'
+      - '.flake8'
+      - '.editorconfig'
+      - 'pyrightconfig.json'
+      - 'app-config.json'
+      - 'tsconfig.json'
+      - '.eslintrc*'
+      - '.prettierrc*'
+      - '.env.example'

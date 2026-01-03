@@ -1,16 +1,7 @@
 """
-Core modules for Project-AI.
+Core business logic and AI systems for Project-AI.
 
-This package contains the business logic and core AI systems including:
-- AI Systems (FourLaws, Persona, Memory, Learning, Plugins, Override)
-- User Management
-- Command Override
-- Learning Paths
-- Data Analysis
-- Security Resources
-- Location Tracker
-- Emergency Alerts
-- Intelligence Engine
-- Intent Detection
-- Image Generation
+This package contains the primary AI engines and supporting services used by
+the desktop and web applications, including ethics, persona, memory,
+learning, security, data analysis, and integration components.
 """

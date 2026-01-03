@@ -26,3 +26,4 @@ README_UPDATED.md
 *.jar
 screenshots/
 codacy-analysis-cli-assembly.jar
+actionlint

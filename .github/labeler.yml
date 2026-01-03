@@ -86,7 +86,6 @@ docker:
 configuration:
   - changed-files:
     - any-glob-to-any-file:
-      - 'pyproject.toml'
       - 'pytest.ini'
       - '.flake8'
       - '.editorconfig'

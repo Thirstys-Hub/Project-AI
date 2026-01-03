@@ -48,7 +48,9 @@ documentation:
 # GitHub Workflows
 workflows:
   - changed-files:
-    - any-glob-to-any-file: '.github/workflows/**/*.yml'
+    - any-glob-to-any-file:
+      - '.github/workflows/**/*.yml'
+      - '.github/workflows/**/*.yaml'
 
 # Dependencies
 dependencies:
@@ -84,9 +86,13 @@ docker:
 configuration:
   - changed-files:
     - any-glob-to-any-file:
-      - '*.yml'
-      - '*.yaml'
-      - '*.json'
-      - '*.toml'
-      - '.env*'
+      - 'pyproject.toml'
+      - 'pytest.ini'
+      - '.flake8'
+      - '.editorconfig'
+      - 'pyrightconfig.json'
       - 'app-config.json'
+      - 'tsconfig.json'
+      - '.eslintrc*'
+      - '.prettierrc*'
+      - '.env.example'
